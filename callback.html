@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Authorization Callback</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding: 40px 20px;
+        }
+        .card {
+            background: #161823;
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+        }
+        .success-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        p {
+            color: #888;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+        .code-box {
+            background: #2b2b2b;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+            word-break: break-all;
+            font-size: 12px;
+            color: #ccc;
+        }
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            background: #fe2c55;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .error {
+            color: #fe2c55;
+        }
+        .info {
+            background: #1a1a2e;
+            border-left: 3px solid #25f4ee;
+            padding: 12px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 24px;
+            font-size: 13px;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card" id="content">
+            <!-- Content injected by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Parse callback parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const state = urlParams.get('state');
+        const scopes = urlParams.get('scopes');
+        const error = urlParams.get('error');
+        const errorDescription = urlParams.get('error_description');
+
+        const contentDiv = document.getElementById('content');
+
+        if (error) {
+            // Authorization failed
+            contentDiv.innerHTML = `
+                <div class="success-icon">❌</div>
+                <h1>Authorization Failed</h1>
+                <p class="error">${errorDescription || error}</p>
+                <a href="demo.html" class="btn">Try Again</a>
+            `;
+        } else if (code) {
+            // Authorization successful
+            contentDiv.innerHTML = `
+                <div class="success-icon">✅</div>
+                <h1>Authorization Successful!</h1>
+                <p>Your TikTok account has been connected.</p>
+                <div class="code-box">
+                    <strong>Authorization Code:</strong><br>
+                    ${code.substring(0, 50)}...
+                </div>
+                <div class="code-box">
+                    <strong>Scopes Granted:</strong><br>
+                    ${scopes || 'user.info.basic, video.publish'}
+                </div>
+                <a href="demo.html?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state || '')}" class="btn">Continue to Upload</a>
+                <div class="info">
+                    <strong>Note:</strong> In production, this page would automatically exchange the authorization code for an access token. For demo purposes, click "Continue to Upload" to proceed.
+                </div>
+            `;
+            
+            // Store in sessionStorage for demo app to use
+            if (code) sessionStorage.setItem('auth_code', code);
+            if (state) sessionStorage.setItem('auth_state', state);
+        } else {
+            // No parameters - direct visit
+            contentDiv.innerHTML = `
+                <div class="success-icon">⚠️</div>
+                <h1>No Authorization Data</h1>
+                <p>This page should only be accessed after TikTok authorization.</p>
+                <a href="demo.html" class="btn">Go to Demo App</a>
+            `;
+        }
+    </script>
+</body>
+</html>
