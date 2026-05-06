@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenClaw TikTok Uploader</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <style>
         body {
             max-width: 700px;
@@ -14,14 +16,26 @@
             color: #1a1a1a;
             background: #fafafa;
         }
-        h1 {
+        .app-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .app-header img {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+        }
+        .app-header h1 {
             font-size: 2rem;
-            margin-bottom: 0.25rem;
+            margin: 0;
         }
         .tagline {
             color: #666;
             font-size: 1.1rem;
-            margin-top: 0;
+            margin-top: -24px;
+            margin-bottom: 32px;
         }
         .card {
             background: #fff;
@@ -68,7 +82,10 @@
     </style>
 </head>
 <body>
-    <h1>OpenClaw TikTok Uploader</h1>
+    <div class="app-header">
+        <img src="app-icon.jpg" alt="OpenClaw TikTok Uploader">
+        <h1>OpenClaw TikTok Uploader</h1>
+    </div>
     <p class="tagline">An automated content publishing tool for TikTok creators</p>
 
     <div class="card">
